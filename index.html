@@ -25,15 +25,18 @@
     var terrainProvider = new Cesium.CesiumTerrainProvider({
         url : 'http://cesium.agi.com/smallterrain'
     });
-//    centralBody.terrainProvider = terrainProvider;
+    centralBody.terrainProvider = terrainProvider;
 
     //adding openstreetmap layer
     var layers = widget.centralBody.getImageryLayers();
-    layers.removeAll();
-    layers.addImageryProvider(
-        new Cesium.OpenStreetMapImageryProvider()
-    );
+    //layers.removeAll();
+    /*layers.addImageryProvider(
+        new Cesium.OpenStreetMapImageryProvider({
+            url:'http://tile.opencyclemap.org/cycle'
+        })
+    );*/
 
+    //adding bing layer
     // Pipeline
     //  csv to JSON
     //  Resize or tile images
@@ -67,7 +70,7 @@
     }));
 */    
 
-    var polygon = new Cesium.Polygon();
+   /* var polygon = new Cesium.Polygon();
     polygon.setPositions(ellipsoid.cartographicArrayToCartesianArray([
         Cesium.Cartographic.fromDegrees(-72.361, -36.18833333),
         Cesium.Cartographic.fromDegrees(-73.184, -36.93666667),
@@ -77,14 +80,17 @@
     polygon.material = new Cesium.Material.fromType(scene.getContext(), 'Image');
     polygon.material.uniforms.image = 'Assets/12148.jpg';
     primitives.add(polygon);
+    */
 
 //  camera.controller.viewExtent(extent, ellipsoid);    
     
     scene.render();
     var flight = Cesium.CameraFlightPath.createAnimationCartographic(scene.getFrameState(), {
-        destination : Cesium.Cartographic.fromDegrees(-72.5926666666667, -36.679, 100000.0)
+        destination : Cesium.Cartographic.fromDegrees(centerX,centerY, 100000.0)
     });
     scene.getAnimations().add(flight);    
+
+    var ktm = Cesium.Cartographic.fromDegrees(centerX,centerY, 15000.0);
   </script>
 </body>
 </html>
