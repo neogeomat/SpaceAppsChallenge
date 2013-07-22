@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Earth from Space - International Space Apps Challenge</title>
+    <script type="text/javascript" src="Cesium/Cesium.js"></script>
+    <style>
+      @import url(Cesium/Widgets/CesiumWidget/CesiumWidget.css);
+      body {
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+<body>
+  <div id="cesiumContainer"></div>
+  <script>
+    var widget = new Cesium.CesiumWidget('cesiumContainer');
+    var centralBody = widget.centralBody;
+    var ellipsoid = centralBody.getEllipsoid();
+    var scene = widget.scene;
+    var primitives = scene.getPrimitives();
+    var camera = scene.getCamera();
+    
+    var terrainProvider = new Cesium.CesiumTerrainProvider({
+        url : 'http://cesium.agi.com/smallterrain'
+    });
+    centralBody.terrainProvider = terrainProvider;
+
+    //adding openstreetmap layer
+    var layers = widget.centralBody.getImageryLayers();
+    //layers.removeAll();
+    /*layers.addImageryProvider(
+        new Cesium.OpenStreetMapImageryProvider({
+            url:'http://tile.opencyclemap.org/cycle'
+        })
+    );*/
+
+    //adding bing layer
+    // Pipeline
+    //  csv to JSON
+    //  Resize or tile images
+    
+    // Graphics
+    //  Compute rotation angle
+    //  blend layers
+    //  Sample terrain to draw outline
+
+/*    
+-72.361	-36.18833333	
+-73.184	-36.93666667	
+-74.56466667	-35.92333333	
+-73.73933333	-35.185
+*/
+    var centerX = 85.381540;//491213.721224323//-123.1684986291807;//9497800;
+    var centerY = 27.710237;//5456645.24607268//49.245339757767844;//3212000;
+    var range = 0.0025;//10000000//.5;//10000;
+    var map_bound = [centerX-range,centerY-range,centerX+range,centerY+range];
+    var extent = new Cesium.Extent(
+        Cesium.Math.toRadians(map_bound[0]),
+        Cesium.Math.toRadians(map_bound[1]),
+        Cesium.Math.toRadians(map_bound[2]),
+        Cesium.Math.toRadians(map_bound[3])
+    );
+  
+/*  
+    centralBody.getImageryLayers().addImageryProvider(new Cesium.SingleTileImageryProvider({
+        url : 'Assets/12148.jpg',
+        extent : extent
+    }));
+*/    
+
+   /* var polygon = new Cesium.Polygon();
+    polygon.setPositions(ellipsoid.cartographicArrayToCartesianArray([
+        Cesium.Cartographic.fromDegrees(-72.361, -36.18833333),
+        Cesium.Cartographic.fromDegrees(-73.184, -36.93666667),
+        Cesium.Cartographic.fromDegrees(-74.56466667, -35.92333333),
+        Cesium.Cartographic.fromDegrees(-73.73933333, -35.185)
+    ]), 0.0, Cesium.Math.toRadians(-30.0));
+    polygon.material = new Cesium.Material.fromType(scene.getContext(), 'Image');
+    polygon.material.uniforms.image = 'Assets/12148.jpg';
+    primitives.add(polygon);
+    */
+
+//  camera.controller.viewExtent(extent, ellipsoid);    
+    
+    scene.render();
+    var flight = Cesium.CameraFlightPath.createAnimationCartographic(scene.getFrameState(), {
+        destination : Cesium.Cartographic.fromDegrees(centerX,centerY, 100000.0)
+    });
+    scene.getAnimations().add(flight);    
+
+    var ktm = Cesium.Cartographic.fromDegrees(centerX,centerY, 15000.0);
+  </script>
+</body>
+</html>
